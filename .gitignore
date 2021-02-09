@@ -1,0 +1,11 @@
+
+
+logs
+
+node_modules/
+
+coverage/
+
+.env
+.env.test
+.env*.local
