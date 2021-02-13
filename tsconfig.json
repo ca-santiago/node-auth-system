@@ -10,8 +10,6 @@
     "removeComments": true,
 
     "noImplicitThis": true,
-
-    "baseUrl": "./src",
     "esModuleInterop": true,
 
     "skipLibCheck": true,

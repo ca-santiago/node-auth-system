@@ -11,3 +11,7 @@ export function left<t>(value: t): Left<t>{
 export function right<t>(value: t): Right<t>{
 	return {tag: 'right', value } 
 }
+
+export function CombineEitherResults<T>(args: Either<string[], any>[]): Either<string[], T>{
+		return args.find(theEither => theEither.tag == 'left');
+}

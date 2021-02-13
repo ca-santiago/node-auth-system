@@ -11,7 +11,7 @@ export abstract class ValueObject<T> {
     return Object.freeze(this.props)
   }
 
-  public readonly props: T;
+  protected props: T;
 
   constructor(props: T) {
     this.props = props;

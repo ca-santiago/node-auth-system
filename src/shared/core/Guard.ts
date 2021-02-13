@@ -21,6 +21,7 @@ export class Guard {
    * Test one argument to verify if it is null or undefined
    * @param argument to be tested 
    * @param argumentName 
+	 * TODO: Define argument type
    */
   public static againstNullOrUndefined(argument: any, argumentName: string): Result<any> {
     if (argument === null || argument === undefined) {
@@ -34,12 +35,12 @@ export class Guard {
    * Receive a collection of guard argument and verify if there is error on them
    * @param args A collection of GuardArguments
    */
-  public static againstNullOrUndefinedBulk(args: GuardArgumentCollection): Result<any> {
+  public static againstNullOrUndefinedBulk(args: GuardArgumentCollection): Result<undefined> {
     for (let arg of args) {
       const result = this.againstNullOrUndefined(arg.argument, arg.argumentName);
       if (result.isSuccess === false) return result;
     }
-    return Result.ok();
+    return Result.ok(undefined);
   }
 
   public static optionalInput(value: any, defa: any): any {

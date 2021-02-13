@@ -5,37 +5,37 @@ export namespace UseCasesErrors {
 
     export class InvalidParamError extends Result<any>{
         constructor(msg: string[]) {
-            super(false, msg, null);
+            super(msg, undefined);
         }
     }
 
     export class Unauthorized extends Result<any>{
         constructor() {
-            super(false, ['Unauthorized'], null);
+            super(['Unauthorized'], undefined);
         }
     }
 
     export class InvalidCredentials extends Result<any>{
         constructor() {
-            super(false, ['Invalid credentials'], null);
+            super(['Invalid credentials'], undefined);
         }
     }
 
     export class NotFound extends Result<any>{
         constructor() {
-            super(false, ['Not found'], null);
+            super(['Not found']);
         }
     }
 
     export class DataBaseConnection extends Result<any>{
         constructor() {
-            super(false, ['Database is down'], null)
+            super(['Database is down'], undefined)
         }
     }
 
     export class Conflict extends Result<any>{
         constructor(errors: string[]) {
-            super(false, errors, null)
+            super(errors, undefined)
         }
     }
 }

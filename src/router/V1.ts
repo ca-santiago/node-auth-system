@@ -1,8 +1,8 @@
+import { Router } from "express";
+import { AuthRouter } from "../modules/auth/infra/router";
 
-import { Router } from 'express'
+const RouterV1 = Router();
 
-const RouterV1 = Router()
-
-//TODO: Build router
+RouterV1.use(AuthRouter);
 
 export default RouterV1;

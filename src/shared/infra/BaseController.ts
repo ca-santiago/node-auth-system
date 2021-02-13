@@ -83,10 +83,10 @@ export abstract class BaseController {
     public handleCommonResponse(res: express.Response, result: Result<any>): Result<any> | null {
         switch (result.constructor) {
             case UseCasesErrors.InvalidParamError:
-                this.badRequest(res, result.error);
+                this.badRequest(res, result.errors);
                 return null;
             case UseCasesErrors.Conflict:
-                this.conflict(res, result.error);
+                this.conflict(res, result.errors);
                 return null
             case UseCasesErrors.InvalidParamError:
 
