@@ -19,7 +19,7 @@ export class CreateAccountUseCase implements IUseCase<CreateAccountDTO, UseCaseR
     const { email, password, accountname } = dto;
 
     const exist = this.repo.findByEmail(email);
-    if(exist)
+    if(!exist)
       return left(['Email already registered']);
 
     const passOrError = Password.create({ value: password, isHashed: false });

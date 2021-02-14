@@ -4,7 +4,7 @@ import { Email } from "../domain/Email";
 import { AccountName } from "../domain/Name";
 import { Password } from "../domain/Password";
 import { IPersistenceDTO } from "./IPersistence";
-import { PublicDTO } from "./PublicDTO";
+import { PublicAccountDTO } from "./PublicDTO";
 
 export class AccountMapper {
   public async mapToDomain(rawData: IPersistenceDTO): Promise<Account> {
@@ -39,9 +39,9 @@ export class AccountMapper {
     return output;
   }
 
-  public mapToDTO(e: Account): PublicDTO {
+  public mapToDTO(e: Account): PublicAccountDTO {
     const { email, AccountName } = e.props;
-    const dto: PublicDTO = {
+    const dto: PublicAccountDTO = {
       accountname: AccountName.raw.value,
       email: email.raw,
       id: e.id.value,

@@ -1,5 +1,4 @@
-
-export interface PublicDTO {
+export interface PublicAccountDTO {
   id: string;
   accountname: string;
   email: string;

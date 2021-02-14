@@ -14,6 +14,10 @@ export class Password extends ValueObject<PasswordProps> {
     super(props);
   }
 
+	public compare(toCompare: string): boolean {
+		return bcryptjs.compareSync(toCompare, this.props.value);	
+	}
+
   public static create(props: PasswordProps): Result<Password> {
     const errors = [];
     const finalProps = { ...props };

@@ -18,6 +18,10 @@ export class Account extends AggregateRoot<AccountProps>{
 		super(props, id);
 	}
 
+	public comparePasswords(toCompare: string): boolean {
+	  return this.props.password.compare(toCompare);
+	}
+
 	public static create(props: AccountProps, id?: EntityId): Result<Account> {
 	  return Result.ok(new Account(props, id));
 	}
