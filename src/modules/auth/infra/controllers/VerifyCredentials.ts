@@ -10,6 +10,13 @@ export class VerifyCredentialsController extends BaseController {
 
 	public async executeImpl(req, res): Promise<any> {
 		const { token, refreshToken } = req.body;
+		
+		const errors = [];
+		if (!token)
+			errors.push('Should provide token');
+
+		if (errors.length > 0)
+			return this.badRequest(res, errors);
 
 		const dto = {token, refreshToken };
 		const useCaseResult = await this.useCase.run(dto);

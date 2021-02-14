@@ -3,6 +3,7 @@ import { IUseCase } from "../../../../shared/core/IUseCase";
 import { VerifyCredentialsDTO  } from "./DTO";
 import { MongoAccountRepo } from "../../repo/mongo";
 import { AuthTokens, createAccessToken, CreateAccessTokenProps, createAuthTokens, createRefreshToken, decodeRefreshToken, decodeToken } from "../../services/jwt";
+import {Guard} from "../../../../shared/core/Guard";
 
 type _Result = Either<null, AuthTokens>;
 
@@ -15,6 +16,8 @@ export class VerifyCredentialsUseCase implements IUseCase<VerifyCredentialsDTO, 
 
   async run(req: VerifyCredentialsDTO): Promise<_Result> {
 		const { refreshToken, token } = req;
+
+		const refTokenOrDefaul = Guard.optionalInput(refreshToken, '');
 		
 		// Verifying acces token authenticity
 		// if is valid, just return right otherwise verify refreshToken
@@ -23,7 +26,7 @@ export class VerifyCredentialsUseCase implements IUseCase<VerifyCredentialsDTO, 
 		
 		// Verifying acces token authenticity
 		// if is invalid return left otherwise continue to generate new tokens
-		const refresResult = decodeRefreshToken(refreshToken);
+		const refresResult = decodeRefreshToken(refTokenOrDefaul);
 		if(refresResult.tag === 'left') return left(null);	
 		
 
