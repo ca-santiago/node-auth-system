@@ -1,5 +1,3 @@
-import { left, Either, right, Right } from "../../../../shared/core/Either";
-
 export interface IUseCaseError<T> {
 	value: T;
 }
@@ -12,6 +10,3 @@ export class BadRequest implements IUseCaseError<string[]> {
 		this.value = errors;
 	}
 }
-
-
-
