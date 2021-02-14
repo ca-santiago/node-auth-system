@@ -9,7 +9,7 @@ export interface CreateAccessTokenProps { payload: TokenPayload; }
 export interface RefreshTokenPayload { userId: string; }
 export interface CreateRefreshTokenProps { payload: RefreshTokenPayload; }
 export interface AuthTokens { token: string; refreshToken: string; }
-export type TokenVerificationResult = AuthTokens & {refreshed: boolean};
+export type TokenVerificationResult = AuthTokens & {refreshed: boolean } & TokenPayload;
 
 
 /**
@@ -74,7 +74,11 @@ export function processTokens(tokens: AuthTokens): Either<null, TokenVerificatio
   // Verifying acces token authenticity
 	// if is valid, just return right otherwise verify refreshToken
 	const res = decodeToken(token);
-	if(res.tag == 'right') return right({ token, refreshToken, refreshed: false });
+	if(res.tag == 'right')
+	  return right({
+			token, refreshToken, refreshed: false,
+			userId: res.value.userId
+		});
 		
 	// Verifying refresh token authenticity
 	// if is invalid return left otherwise continue to generate new tokens
@@ -90,6 +94,9 @@ export function processTokens(tokens: AuthTokens): Either<null, TokenVerificatio
 		payload: { userId: refresResult.value.userId }	
 	});
 
-	return right({token: newToken, refreshToken: newRefToken, refreshed: true});
+	return right({
+		  token: newToken, refreshToken: newRefToken,
+		 	refreshed: true, userId: refresResult.value.userId
+	});
 }
 
