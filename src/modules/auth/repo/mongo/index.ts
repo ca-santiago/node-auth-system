@@ -31,4 +31,9 @@ export class MongoAccountRepo implements IAccountRepo<Account> {
     async find(id: string): Promise<Account> {
         throw new Error("Method not implemented.");
     }
+
+		async delete(id: string): Promise<void> {
+			await AccountModel.findByIdAndDelete(id).exec();
+			return
+		}
 }

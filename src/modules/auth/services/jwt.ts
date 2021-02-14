@@ -4,9 +4,9 @@ import {Either, left, right} from '../../../shared/core/Either';
 export const _secret1 = '28B2D447F95417849BB8ECC65733B977E2F10F9DD245861FA0F8867D7B2F9986';
 export const _secret2 = 'b9KwpREab2jsCPRFM7TWG31JWplWLZ4YhBu6WuVuQiJppO0lcm8QSSGi9YZURO7';
 
-export interface TokenPayload { userId: string; }
+export interface TokenPayload { accountId: string; }
 export interface CreateAccessTokenProps { payload: TokenPayload; }
-export interface RefreshTokenPayload { userId: string; }
+export interface RefreshTokenPayload { accountId: string; }
 export interface CreateRefreshTokenProps { payload: RefreshTokenPayload; }
 export interface AuthTokens { token: string; refreshToken: string; }
 export type TokenVerificationResult = AuthTokens & {refreshed: boolean } & TokenPayload;
@@ -54,11 +54,11 @@ export function decodeRefreshToken(token: string): Either<null, RefreshTokenPayl
 /**
  * Create token and refresh token based on the individual methods
  */
-export async function createAuthTokens(userId: string): Promise<AuthTokens> {
-	const tokenProps = {payload: {userId}}
+export async function createAuthTokens(accountId: string): Promise<AuthTokens> {
+	const tokenProps = { payload: { accountId }};
   const token = createAccessToken(tokenProps);	
 
-	const refreshProps = {payload: {userId} };
+	const refreshProps = { payload: { accountId }};
 	const refreshToken = createRefreshToken(refreshProps);
 
 	return { token, refreshToken }
@@ -77,7 +77,7 @@ export function processTokens(tokens: AuthTokens): Either<null, TokenVerificatio
 	if(res.tag == 'right')
 	  return right({
 			token, refreshToken, refreshed: false,
-			userId: res.value.userId
+			accountId: res.value.accountId
 		});
 		
 	// Verifying refresh token authenticity
@@ -88,15 +88,15 @@ export function processTokens(tokens: AuthTokens): Either<null, TokenVerificatio
   
   // Creating new tokens
   const newToken = createAccessToken({
-		payload: { userId: refresResult.value.userId }
+		payload: { accountId: refresResult.value.accountId	}
 	});	
 	const newRefToken = createRefreshToken({
-		payload: { userId: refresResult.value.userId }	
+		payload: { accountId: refresResult.value.accountId }	
 	});
 
 	return right({
 		  token: newToken, refreshToken: newRefToken,
-		 	refreshed: true, userId: refresResult.value.userId
+		 	refreshed: true, accountId: refresResult.value.accountId
 	});
 }
 

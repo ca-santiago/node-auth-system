@@ -14,11 +14,11 @@ export function VerifyCredentials(req, res, next){
 		return BaseController.jsonResponse(res, 401);
 
 
-  const authResult = processTokens({token, refreshToken });
+  const authResult = processTokens({ token, refreshToken });
 	if(authResult.tag === 'left')
 		return BaseController.jsonResponse(res,401);
-	
-	req.body.userId = authResult.value.userId;	
+
+	req.body.accountId = authResult.value.accountId;
 	next();
 }
 

@@ -6,4 +6,5 @@ export interface IAccountRepo<D>{
   exist(id: string): Promise<boolean>;
   findByEmail(email: string): Promise<D>;
   find(id: string): Promise<D>;
+	delete(id: string): Promise<void>;
 }
