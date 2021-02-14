@@ -9,15 +9,21 @@ export interface CreateAccessTokenProps { payload: TokenPayload; }
 export interface RefreshTokenPayload { userId: string; }
 export interface CreateRefreshTokenProps { payload: RefreshTokenPayload; }
 export interface AuthTokens { token: string; refreshToken: string; }
+export type TokenVerificationResult = AuthTokens & {refreshed: boolean};
 
 
-
+/**
+ * Create a ephimeral access token.
+ */
 export function createAccessToken(props: CreateAccessTokenProps) {
 	const { payload } = props;
 	const token = jwt.sign(payload, _secret1, { expiresIn: '1m' });
 	return token;
 }
 
+/**
+ * Create a long live token used for refreshing access
+ */
 export function createRefreshToken(props: CreateRefreshTokenProps) {
 	const { payload } = props;	
 	const token = jwt.sign(payload, _secret2, { expiresIn: '15d'} );
@@ -45,7 +51,9 @@ export function decodeRefreshToken(token: string): Either<null, RefreshTokenPayl
 		return left(null);
 	}
 }
-
+/**
+ * Create token and refresh token based on the individual methods
+ */
 export async function createAuthTokens(userId: string): Promise<AuthTokens> {
 	const tokenProps = {payload: {userId}}
   const token = createAccessToken(tokenProps);	
@@ -56,20 +64,32 @@ export async function createAuthTokens(userId: string): Promise<AuthTokens> {
 	return { token, refreshToken }
 }
 
+/**
+ * Verify the authenticity of each token an return valid ones
+ * if both are invalid, just return left.
+ */
+export function processTokens(tokens: AuthTokens): Either<null, TokenVerificationResult> {
+	const { token, refreshToken } = tokens;
 
-export function verifyTokens(tokens: AuthTokens, userId): Either<null, AuthTokens> {
-	throw new Error('Method not implemented');
-	// const { token, refreshToken } = tokens;	
-
-	// let _res = decodeToken(token);	
-	// if(_res.tag === 'left'){
-		// const refreshRes = decodeRefreshToken(refreshToken);	
-		// if(refreshRes.tag === 'left')
-		// return left(null);
-
-		// createAccessToken();
-	// } else {
+  // Verifying acces token authenticity
+	// if is valid, just return right otherwise verify refreshToken
+	const res = decodeToken(token);
+	if(res.tag == 'right') return right({ token, refreshToken, refreshed: false });
+		
+	// Verifying refresh token authenticity
+	// if is invalid return left otherwise continue to generate new tokens
+	const refresResult = decodeRefreshToken(refreshToken);
+	if(refresResult.tag === 'left') return left(null);	
 	
-	//}
+  
+  // Creating new tokens
+  const newToken = createAccessToken({
+		payload: { userId: refresResult.value.userId }
+	});	
+	const newRefToken = createRefreshToken({
+		payload: { userId: refresResult.value.userId }	
+	});
+
+	return right({token: newToken, refreshToken: newRefToken, refreshed: true});
 }
 

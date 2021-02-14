@@ -2,7 +2,7 @@ import { Either, left, right } from "../../../../shared/core/Either";
 import { IUseCase } from "../../../../shared/core/IUseCase";
 import { VerifyCredentialsDTO  } from "./DTO";
 import { MongoAccountRepo } from "../../repo/mongo";
-import { AuthTokens, createAccessToken, CreateAccessTokenProps, createAuthTokens, createRefreshToken, decodeRefreshToken, decodeToken } from "../../services/jwt";
+import { AuthTokens, processTokens } from "../../services/jwt";
 import {Guard} from "../../../../shared/core/Guard";
 
 type _Result = Either<null, AuthTokens>;
@@ -19,29 +19,14 @@ export class VerifyCredentialsUseCase implements IUseCase<VerifyCredentialsDTO, 
 
 		const refTokenOrDefaul = Guard.optionalInput(refreshToken, '');
 		
-		// Verifying acces token authenticity
-		// if is valid, just return right otherwise verify refreshToken
-		const res = decodeToken(token);
-		if(res.tag == 'right') return right({token, refreshToken });
-		
-		// Verifying acces token authenticity
-		// if is invalid return left otherwise continue to generate new tokens
-		const refresResult = decodeRefreshToken(refTokenOrDefaul);
-		if(refresResult.tag === 'left') return left(null);	
-		
-
-		// Creating new tokens
-		const newToken = createAccessToken({
-			payload: { userId: refresResult.value.userId }
-		});	
-		const newRefToken = createRefreshToken({
-			payload: { userId: refresResult.value.userId }	
-		});
+		const res = processTokens({token, refreshToken: refTokenOrDefaul });
+		if(res.tag === 'left')
+		  return left(null);
 
 
-		return right({ 
-				token: newToken,
-				refreshToken: newRefToken
-	    });
+		return right({
+		    token: res.value.token,
+				refreshToken: res.value.refreshToken
+	 	});
   }
 }

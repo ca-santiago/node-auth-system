@@ -18,7 +18,7 @@ export class VerifyCredentialsController extends BaseController {
 		if (errors.length > 0)
 			return this.badRequest(res, errors);
 
-		const dto = {token, refreshToken };
+		const dto = { token, refreshToken };
 		const useCaseResult = await this.useCase.run(dto);
 
 		if(useCaseResult.tag === 'left')

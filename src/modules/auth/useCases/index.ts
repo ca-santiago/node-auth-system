@@ -1,8 +1,8 @@
 import { AccountMapper } from "../mapper";
 import { MongoAccountRepo } from "../repo/mongo";
-import {CreateAccountUseCase} from "./CreateAccont/UseCase";
-import {LoginUseCase} from "./Login/UseCase";
-import {VerifyCredentialsUseCase} from "./verify/UseCase";
+import { CreateAccountUseCase } from "./CreateAccont/UseCase";
+import { LoginUseCase } from "./Login/UseCase";
+import { VerifyCredentialsUseCase } from "./verify/UseCase";
 
 const accountMapper = new AccountMapper();
 const mongoRepo = new MongoAccountRepo(accountMapper);
