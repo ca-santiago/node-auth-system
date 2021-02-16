@@ -1,4 +1,6 @@
 import mongoose, { Document } from "mongoose";
+import {EntityId} from "../../../../shared/domain/EntityId";
+import {DomainEvents} from "../../../../shared/domain/events/DomainEvents";
 import { MongooseTypedSchema } from "../../../../shared/types/TypedSchema";
 import { IPersistenceDTO } from "../../mapper/IPersistence";
 
@@ -16,5 +18,13 @@ const SchemaDef: MongooseTypedSchema<IPersistenceDTO> = {
   _id: { type: String }
 }
 
-const accountSchema = new mongoose.Schema(SchemaDef);
-export const AccountModel = mongoose.model<AccountDocument>('Account', accountSchema);
+
+const AccountSchema = new mongoose.Schema(SchemaDef);
+
+AccountSchema.post('findOneAndUpdate', async function (data, next){
+	const eId = EntityId.from(this.get('_id')).getValue();
+	DomainEvents.dispatchEventsForAggregate(eId);
+});
+
+
+export const AccountModel = mongoose.model<AccountDocument>('Account', AccountSchema);

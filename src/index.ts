@@ -1,1 +1,3 @@
-import './app' 
+import './app';
+
+import "./modules/auth/subscriptions";
