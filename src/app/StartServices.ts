@@ -1,9 +1,10 @@
-
+import {StartAuthSubscriptions} from "../modules/auth/subscriptions";
 import { initMongoConnection, MongoConnectionConf } from "../shared/infra/mongodb";
 import { loadMongoConfig } from "./loadMongoConfig";
 
 export async function StartServices() {
   await LoadMogoService();
+	await StartAuthSubscriptions();
 }
 
 

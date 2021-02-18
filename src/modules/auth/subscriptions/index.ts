@@ -1,14 +1,25 @@
-import { DomainEvents } from "../../../shared/domain/events/DomainEvents";
-import { Account } from "../domain/Account";
-import { NewUserCreated } from "../domain/Events/NewUserCreated";
+import { DomainEvents} from "../../../shared/domain/events/DomainEvents";
+import { NewAccountCreated } from "../domain/Events/NewUserCreated";
+import {
+	GetMQInstance,
+	MQServicePublisher
+} from "../../../shared/services/MQ";
+import { AcccountCreatedHandler } from "./OnAccountCreated";
 
-(()=>{
-	console.log('[AuthSubs] Start loading...');	
+export async function StartAuthSubscriptions(){
+	const mq = await GetMQInstance();
 
-  DomainEvents.register((data)=>{
-	  console.log('[DomainEvent] Handled User Created');
-  }, NewUserCreated.name);
+	const routingKey = `${process.env.MQ_SERVICE_NAME}.account`;
+	const exchange = process.env.MQ_EXCHANGE;
 
-	console.log('[AuthSubs] Ready');
-})()
+	const mqPublisher = new MQServicePublisher(mq, routingKey, exchange);
 
+	
+	// Publishers
+	//DomainEvents.register(
+	//  AcccountCreatedHandler(mqPublisher),
+  //  NewAccountCreated.name
+	//);
+	
+	// Consumers
+}

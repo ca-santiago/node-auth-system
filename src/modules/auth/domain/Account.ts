@@ -5,7 +5,7 @@ import {Email} from "./Email";
 import {Password} from "./Password";
 import {AccountName} from "./Name";
 import { EntityId } from "../../../shared/domain/EntityId";
-import {NewUserCreated} from "./Events/NewUserCreated";
+import { NewAccountCreated } from "./Events/NewUserCreated";
 
 export interface AccountProps {
 	email: Email;
@@ -26,7 +26,7 @@ export class Account extends AggregateRoot<AccountProps>{
 	public static create(props: AccountProps, id?: EntityId): Result<Account> {
 		const accountInstance = new Account(props, id);
 
-		if(!id) accountInstance.addDomainEvent(new NewUserCreated(accountInstance));
+		if(!id) accountInstance.addDomainEvent(new NewAccountCreated(accountInstance));
 
 	  return Result.ok(accountInstance);
 	}
