@@ -10,12 +10,17 @@ export async function GetMQInstance(): Promise<amqp.Connection>{
 
 async function StartConnection(): Promise<amqp.Connection> {
 	if(MQConn) return MQConn;
-		
-	console.log('[MQ] Starting conection');
-	const url = process.env.MQ_URL || 'amqp://localhost';
-  MQConn = await amqp.connect(url);
-  console.log('[MQ] Conection started');
-	return MQConn;
+	try{
+    console.log('[MQ] Starting conection');
+	  const url = process.env.MQ_URL || 'amqp://localhost';
+    MQConn = await amqp.connect(url);
+    console.log('[MQ] Conection started');
+	  return MQConn;
+	}	catch (err) {
+		console.log('[MQ] Could not connect');
+		console.log(err.message);
+		throw err;
+	}
 }
 
 

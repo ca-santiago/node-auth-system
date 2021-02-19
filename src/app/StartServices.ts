@@ -1,10 +1,14 @@
 import {StartAuthSubscriptions} from "../modules/auth/subscriptions";
 import { initMongoConnection, MongoConnectionConf } from "../shared/infra/mongodb";
+import {GetMQInstance} from "../shared/services/MQ";
 import { loadMongoConfig } from "./loadMongoConfig";
 
 export async function StartServices() {
   await LoadMogoService();
-	await StartAuthSubscriptions();
+	try {
+	 await GetMQInstance();
+   await StartAuthSubscriptions();
+	} catch (err) {}
 }
 
 
