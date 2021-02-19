@@ -28,8 +28,11 @@ export class MongoAccountRepo implements IAccountRepo<Account> {
        return this.mapper.mapToDomain(res);
     }
 
-    async find(id: string): Promise<Account> {
-        throw new Error("Method not implemented.");
+    async find(id: string): Promise<Account | null > {
+				const exists = await AccountModel.findById(id).exec();
+				if(exists)
+				  return this.mapper.mapToDomain(exists as IPersistenceDTO);
+	      return null;
     }
 
 		async delete(id: string): Promise<void> {

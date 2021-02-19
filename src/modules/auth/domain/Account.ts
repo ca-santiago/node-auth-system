@@ -6,6 +6,7 @@ import {Password} from "./Password";
 import {AccountName} from "./Name";
 import { EntityId } from "../../../shared/domain/EntityId";
 import { NewAccountCreated } from "./Events/NewUserCreated";
+import {AccountDeleted} from "./Events/AccountDeleted";
 
 export interface AccountProps {
 	email: Email;
@@ -21,6 +22,11 @@ export class Account extends AggregateRoot<AccountProps>{
 
 	public comparePasswords(toCompare: string): boolean {
 	  return this.props.password.compare(toCompare);
+	}
+
+	public markAsDelted(): Result<void> {
+		this.addDomainEvent(new AccountDeleted(this));
+		return Result.ok(null);
 	}
 
 	public static create(props: AccountProps, id?: EntityId): Result<Account> {

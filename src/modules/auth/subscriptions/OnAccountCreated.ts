@@ -15,3 +15,14 @@ export function AcccountCreatedHandler(publisher: MQServicePublisher) {
 	}
 }
 
+export function AcccountDeletedHandler(publisher: MQServicePublisher) {
+	return (rawData: IDomainEvent) => {
+    const etty = rawData.entity as Account;
+	  const payload = {
+		  accoutnId: etty.id.value,
+		  email: etty.props.email.raw,
+		  dateTimeOccurred: rawData.dateTimeOccurred,
+	  }
+    publisher.publish(payload, 'deleted');
+	}
+}

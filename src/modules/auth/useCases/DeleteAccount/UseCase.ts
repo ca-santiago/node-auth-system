@@ -12,8 +12,13 @@ export class DeleteAccountUseCase implements IUseCase<DeleteAccountDTO, UseCaseR
 
   public async run(dto: DeleteAccountDTO): Promise<UseCaseResult> {
 		const { accountId } = dto;
-		console.log(accountId);
-		await this.repo.delete(accountId);
+		const accountOrNull = await this.repo.find(accountId);
+		if(accountOrNull){
+		  const res = accountOrNull.markAsDelted();	
+			if(res.isSuccess == false)	
+			  return left(['Cannot delete account']);
+		  await this.repo.delete(accountId);
+		}
 		return right(null);
   }
 }

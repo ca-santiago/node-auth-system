@@ -4,7 +4,8 @@ import {
 	GetMQInstance,
 	MQServicePublisher
 } from "../../../shared/services/MQ";
-import { AcccountCreatedHandler } from "./OnAccountCreated";
+import { AcccountCreatedHandler, AcccountDeletedHandler } from "./OnAccountCreated";
+import {AccountDeleted} from "../domain/Events/AccountDeleted";
 
 export async function StartAuthSubscriptions(){
 	const mq = await GetMQInstance();
@@ -16,10 +17,15 @@ export async function StartAuthSubscriptions(){
 
 	
 	// Publishers
-	//DomainEvents.register(
-	//  AcccountCreatedHandler(mqPublisher),
-  //  NewAccountCreated.name
-	//);
+	DomainEvents.register(
+	  AcccountCreatedHandler(mqPublisher),
+    NewAccountCreated.name
+	);
+
+	DomainEvents.register(
+		AcccountDeletedHandler(mqPublisher),
+		AccountDeleted.name
+	);
 	
 	// Consumers
 }

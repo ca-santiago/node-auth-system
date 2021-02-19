@@ -26,5 +26,9 @@ AccountSchema.post('findOneAndUpdate', async function (data, next){
 	DomainEvents.dispatchEventsForAggregate(eId);
 });
 
+AccountSchema.post('findOneAndDelete', async function (data, next){
+	const eId = EntityId.from(data._id).getValue();
+	DomainEvents.dispatchEventsForAggregate(eId);
+});
 
 export const AccountModel = mongoose.model<AccountDocument>('Account', AccountSchema);
