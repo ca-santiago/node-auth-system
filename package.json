@@ -4,6 +4,8 @@
   "description": "Authentication and authorization system base on Json Web Tokens",
   "main": "index.ts",
   "scripts": {
+		"build": "tsc",
+    "start": "NODE_ENV=PROD node build/index.js",
     "start:dev": "ts-node ./src/",
     "start:watch": "nodemon -L",
     "test": "test"
